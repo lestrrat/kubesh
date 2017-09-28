@@ -57,6 +57,26 @@ kubesh \
     --credentials-file=/path/to/credentials.json
 ```
 
+# Integration With `peco`
+
+If you are too lazy to type the context name, you can integrate it with [peco](https://github.com/peco/peco)
+
+```
+function peco-kubesh() {
+    local selected=$(kubectl config get-contexts | sed -e 's/\*//' | awk 'NR < 2 { next } {print $1}' | peco)
+    ST=$?
+    if [[ $ST != 0 ]]; then
+        exit 1
+    fi
+        
+    if [ -n "$selected" ]; then
+        kubesh --context=$selected
+    fi  
+}
+
+zle -N peco-kubesh
+```
+
 # Support For Other Utilitites
 
 `helm`: helm since 2.0.0 supports `--kube-context` argument, and
