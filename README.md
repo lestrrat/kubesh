@@ -5,7 +5,7 @@ Spawn a shell for a particular kubectl context (cluster).
 # Synopsis
 
 ```
-kubesh --context=name-of-context [--credentials-file=/path/to/credentials.json]
+kubesh --context=name-of-context
 ```
 
 # Installation

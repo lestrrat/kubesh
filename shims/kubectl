@@ -19,8 +19,5 @@ case $1 in
         KUBECTL_ARGS="--context=$KUBESH_CONTEXT $@"
         ;;
 esac
-if [[ ! -z "$KUBESH_CREDENTIALS_FILE" ]]; then
-    export GOOGLE_APPLICATION_CREDENTIALS=$KUBESH_CREDENTIALS_FILE
-fi
 
 exec $KUBESH_KUBECTL $KUBECTL_ARGS

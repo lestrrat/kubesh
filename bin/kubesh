@@ -1,7 +1,6 @@
 #!/bin/bash
 
 KUBESH_CONTEXT=
-KUBESH_CREDENTIALS_FILE=
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
@@ -12,15 +11,6 @@ while [[ $# -gt 0 ]]; do
         ;;
     --context=*)
         KUBESH_CONTEXT="${key#*=}"
-        shift # past argument=value
-        ;;
-    --credentials-file)
-        KUBESH_CREDENTIALS_FILE="$2"
-        shift # past argument
-        shift # past value
-        ;;
-    --credentials-file=*)
-        KUBESH_CREDENTIALS_FILE="${key#*=}"
         shift # past argument=value
         ;;
     esac
