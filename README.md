@@ -40,22 +40,54 @@ do not have to explicitly set the context by yourself.
 
 # Using Multiple GCP Accounts
 
-`kubectl` needs a JSON file that contains the credentials to access
-GCP resources. To do this, the easiest way is probably just to run
+Currently, there are only two ways I know that really works for working with
+multiple accounts.
 
-```
-gcloud auth application-default login
+## 1. Add Your Main-Account As A Member Of Your Sub-Account
+
+Configure your project so that your main account is a member of the project
+for your sub-account. May have security implications, but it's easy.
+
+## 2. Modify ~/.kube/config By Hand
+
+This has proven to be sometimes problematic, possibly because of caching.
+It seemd to work for me when I started with a fresh ~/.kube/config file.
+
+The way kubectl gets tokens is by invoking `gcloud config config-helper`.
+How this command is invoked is stored in `~/.kube/config` file, like so:
+
+```yaml
+- name: gke_project_zone_cluster
+  user:
+    auth-provider:
+      config:
+        cmd-args: config config-helper --format=json
+        cmd-path: /usr/local/google-cloud-sdk/bin/gcloud
+        ...
 ```
 
-Then copy the file `~/.config/gcloud/application_default_credentials.json` to
-a location where it does not get overwritten. Then pass the path to
-that file in `--credentials-file`:
+You can change tell `gcloud config config-helper` to work with a particular
+GCP configuration by setting the `--configuration` parameter. So you could do
+something like below:
 
+```yaml
+- name: gke_project_zone_cluster_A
+  user:
+    auth-provider:
+      config:
+        cmd-args: config config-helper --format=json --configuration=A
+        cmd-path: /usr/local/google-cloud-sdk/bin/gcloud
+- name: gke_project_zone_cluster_B
+  user:
+    auth-provider:
+      config:
+        cmd-args: config config-helper --format=json --configuration=B
+        cmd-path: /usr/local/google-cloud-sdk/bin/gcloud
+        ...
 ```
-kubesh \
-    --context=my-context \
-    --credentials-file=/path/to/credentials.json
-```
+
+This will then force `kubectl` to use different configurations when
+generating access tokens
 
 # Integration With `peco`
 
