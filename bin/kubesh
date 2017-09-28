@@ -1,0 +1,76 @@
+#!/bin/bash
+
+KUBESH_CONTEXT=
+KUBESH_CREDENTIALS_FILE=
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+    --context)
+        KUBESH_CONTEXT="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    --context=*)
+        KUBESH_CONTEXT="${key#*=}"
+        shift # past argument=value
+        ;;
+    --credentials-file)
+        KUBESH_CREDENTIALS_FILE="$2"
+        shift # past argument
+        shift # past value
+        ;;
+    --credentials-file=*)
+        KUBESH_CREDENTIALS_FILE="${key#*=}"
+        shift # past argument=value
+        ;;
+    esac
+done
+
+if [[ -z "$KUBESH_CONTEXT" ]]; then
+    echo "kubesh: --context is required"
+    exit 1
+fi
+
+thisdir=$(cd $(dirname $0); pwd -P)
+shimsdir=$(cd $thisdir/..; pwd -P)/shims
+
+KUBESH_KUBECTL=
+KUBESH_HELM=
+KUBESH_STERN=
+
+# find executables that does NOT reside in our shims directory
+for dir in ${PATH//:/ }; do
+    if [[ "$dir" == "$shimsdir" ]]; then
+        continue
+    fi
+
+    if [[ -z "$KUBESH_KUBECTL" ]] && [[ -x "$dir/kubectl" ]]; then
+        KUBESH_KUBECTL="$dir/kubectl"
+    elif [[ -z "$KUBESH_HELM" ]] && [[ -x "$dir/helm" ]]; then
+        KUBESH_HELM="$dir/helm"
+    elif [[ -z "$KUBESH_STERN" ]] && [[ -x "$dir/stern" ]]; then
+        KUBESH_STERN="$dir/stern"
+    fi
+done
+
+if [[ -z "$KUBESH_KUBECTL" ]]; then
+    echo "kubesh: could not find kubectl anywhere in PATH"
+    exit 1
+fi
+
+
+# enable the shims directory in the PATH
+PATH=$shimsdir:$PATH
+export KUBESH_CONTEXT
+export KUBESH_HELM
+export KUBESH_KUBECTL
+export KUBESH_STERN
+export PATH
+
+case $SHELL in
+    */zsh)
+        SHELL_ARGS=-f
+esac
+
+echo "Starting new shell with kubectl context set to '$KUBESH_CONTEXT'"
+exec $SHELL $SHELL_ARGS

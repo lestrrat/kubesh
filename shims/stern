@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -z "$KUBESH_CONTEXT" ]]; then
+    echo "kubectl(kubesh): KUBESH_CONTEXT is required"
+    exit 1
+fi
+
+if [[ -z "$KUBESH_STERN" ]]; then
+    echo "kubectl(kubesh): KUBESH_STERN is required"
+    exit 1
+fi
+
+STERN_ARGS="--context $KUBESH_CONTEXT $@"
+
+exec $KUBESH_STERN $STERN_ARGS

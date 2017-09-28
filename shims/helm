@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -z "$KUBESH_CONTEXT" ]]; then
+    echo "kubectl(kubesh): KUBESH_CONTEXT is required"
+    exit 1
+fi
+
+if [[ -z "$KUBESH_HELM" ]]; then
+    echo "kubectl(kubesh): KUBESH_HELM is required"
+    exit 1
+fi
+
+HELM_ARGS="--kube-context $KUBESH_CONTEXT $@"
+
+exec $KUBESH_HELM $HELM_ARGS
