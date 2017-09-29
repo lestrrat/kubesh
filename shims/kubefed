@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [[ -z "$KUBESH_CONTEXT" ]]; then
+    echo "kubectl(kubesh): KUBESH_CONTEXT is required"
+    exit 1
+fi
+
+if [[ -z "$KUBESH_KUBEFED" ]]; then
+    echo "kubectl(kubesh): KUBESH_KUBEFED is required"
+    exit 1
+fi
+
+KUBEFED_ARGS=
+if [[ $# -gt 0 ]]; then
+case $1 in
+    help|version)
+        KUBEFED_ARGS="$@"
+        ;;
+    *)
+        KUBEFED_ARGS="--host-cluster-context=$KUBESH_CONTEXT $@"
+        ;;
+esac
+fi
+
+exec $KUBESH_KUBEFED $KUBEFED_ARGS
