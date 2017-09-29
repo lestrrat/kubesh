@@ -116,6 +116,8 @@ we provide support for it.
 
 `stern`: stern supports switching contexts, and we provide support for it.
 
+`kubefed`: --host-cluster-context is populated with the value you passed to --context.
+
 # Cavetas
 
 As of this writing, it only works for zsh. Because we spawn a new shell,
