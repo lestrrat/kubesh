@@ -40,6 +40,9 @@ do not have to explicitly set the context by yourself.
 
 # Using Multiple GCP Accounts
 
+If you are using multiple accounts to control multiple accounts on GCP,
+you may run into problems switching your context.
+
 Currently, there are only two ways I know that really works for working with
 multiple accounts.
 
