@@ -36,11 +36,14 @@ for dir in ${PATH//:/ }; do
 
     if [[ -z "$KUBESH_KUBECTL" ]] && [[ -x "$dir/kubectl" ]]; then
         KUBESH_KUBECTL="$dir/kubectl"
-    elif [[ -z "$KUBESH_KUBEFED" ]] && [[ -x "$dir/kubefed" ]]; then
+    fi
+    if [[ -z "$KUBESH_KUBEFED" ]] && [[ -x "$dir/kubefed" ]]; then
         KUBESH_KUBEFED="$dir/kubefed"
-    elif [[ -z "$KUBESH_HELM" ]] && [[ -x "$dir/helm" ]]; then
+    fi
+    if [[ -z "$KUBESH_HELM" ]] && [[ -x "$dir/helm" ]]; then
         KUBESH_HELM="$dir/helm"
-    elif [[ -z "$KUBESH_STERN" ]] && [[ -x "$dir/stern" ]]; then
+    fi
+    if [[ -z "$KUBESH_STERN" ]] && [[ -x "$dir/stern" ]]; then
         KUBESH_STERN="$dir/stern"
     fi
 done
