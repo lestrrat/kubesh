@@ -121,7 +121,7 @@ we provide support for it.
 
 `kubefed`: --host-cluster-context is populated with the value you passed to --context.
 
-# Cavetas
+# Caveats
 
 As of this writing, it only works for zsh. Because we spawn a new shell,
 we need to stop the newly created shell from reading the rcfiles
